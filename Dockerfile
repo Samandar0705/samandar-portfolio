@@ -1,21 +1,21 @@
-# Python asosiy tasviri
-FROM python:3.10-slim
+# Python rasmidan foydalanamiz
+FROM python:3.12.6-slim 
 
-# Ishchi katalogni belgilash
+# Ishchi katalogni belgilaymiz
 WORKDIR /app
 
-# Talablar faylini nusxalash va o'rnatish
-COPY requirements.txt /app/
+# Kerakli fayllarni ko'chiramiz
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Loyihani nusxalash
-COPY . /app/
+# Boshqa fayllarni ham ko'chiramiz
+COPY . .
 
-# Django statik fayllarini yig‘ish
+# Static fayllarni yig'ib qo'yamiz
 RUN python manage.py collectstatic --noinput
 
-# Portni belgilash
+# Port ochamiz
 EXPOSE 8000
 
-# Django loyihasini ishga tushirish uchun buyruq
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+# Django serverni ishga tushiramiz
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
